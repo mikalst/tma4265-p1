@@ -48,8 +48,6 @@ def p(k):
     res /= 30            
     return res
 
-<<<<<<< HEAD
-
 def main():
     """
     kvalues = [ i for i in range(1, 30 + 1) ]
@@ -63,18 +61,6 @@ def main():
     plot(kvalues, pvalues, "$P(Z = 1)$, given uniformly distrbuten candidate size", "$k$", "$p$",
          10, 1, 15, 0, 0.5)
     
-=======
-def main(n_sim):
-    
-    kvalues = [ i for i in range(1, 16) ]
-    pvalues = [ p(k) for k in kvalues ]
-
-    plt.figure(1)
-    plt.plot(kvalues, pvalues)
-    plt.show()
-
->>>>>>> 9c90c730c7acf1d82381f453c37220233abd0eca
-    return 0
 
 if __name__ == "__main__":
     main(10)
