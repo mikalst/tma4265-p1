@@ -47,26 +47,29 @@ def p(k):
     res /= 30            
     return res
 
-def main():
+def main(n_sim):
     
     kvalues = [ i for i in range(1, 16) ]
     pvalues = [ p(k) for k in kvalues ]
 
     plt.figure(1)
     plt.plot(kvalues, pvalues)
+    plt.show()
     
-    """
-    opt = 10
-    res = 0
-    for i in range(0, 100):
-        res += simulate(opt)
-    print(res)
-    print('\n')
-    """
+    successes = []
+    for _ in range(n_sim):
+	    opt = 10
+	    res = 0
+	    for i in range(0, 100):
+	        res += simulate(opt)
+	    print(res)
+	    successes.append(res)
+	    print('\n')
+    print(sum(successes) / len(successes))
     return 0
 
 if __name__ == "__main__":
-    main()
+    main(10)
     
 
 
