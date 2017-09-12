@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import matplotlib.pyplot as plt
 import numpy as np
+from problem1plots import plot
 
 N = 30
 
@@ -47,22 +48,19 @@ def p(k):
     res /= 30            
     return res
 
+
 def main():
+    """
+    kvalues = [ i for i in range(1, 30 + 1) ]
+    pvalues = [ p_fixed_n(k) for k in kvalues ]
+    plot(kvalues, pvalues, "Probabilty of choosing best candidate for fixed N = 30",
+         "$k$", "$P(Z = 1 | K = k)$", 30 / np.e, 1, 31, 0, 0.5)
+    """
     
     kvalues = [ i for i in range(1, 16) ]
     pvalues = [ p(k) for k in kvalues ]
-
-    plt.figure(1)
-    plt.plot(kvalues, pvalues)
-    
-    
-    print("abc\n");
-    opt = 10
-    res = 0
-    for i in range(0, 100):
-        res += simulate(opt)
-    print(res)
-    print('\n')
+    plot(kvalues, pvalues, "$P(Z = 1)$, given uniformly distrbuten candidate size", "$k$", "$p$",
+         10, 1, 15, 0, 0.5)
     
     return 0
 
