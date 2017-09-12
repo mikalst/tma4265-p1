@@ -55,17 +55,7 @@ def main(n_sim):
     plt.figure(1)
     plt.plot(kvalues, pvalues)
     plt.show()
-    
-    successes = []
-    for _ in range(n_sim):
-	    opt = 10
-	    res = 0
-	    for i in range(0, 100):
-	        res += simulate(opt)
-	    print(res)
-	    successes.append(res)
-	    print('\n')
-    print(sum(successes) / len(successes))
+
     return 0
 
 if __name__ == "__main__":
