@@ -55,14 +55,15 @@ def main():
     plt.figure(1)
     plt.plot(kvalues, pvalues)
     
-    """
+    
+    print("abc\n");
     opt = 10
     res = 0
     for i in range(0, 100):
         res += simulate(opt)
     print(res)
     print('\n')
-    """
+    
     return 0
 
 if __name__ == "__main__":
