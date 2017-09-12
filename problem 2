@@ -1,3 +1,22 @@
+import numpy as np
+import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 
+#a
+P = np.array([[0.95, 0.05], [0, 1]])
+x = np.array([0.99, 0.01])
 
-#test test
+probabilities = []
+probabilities.append(x[0])
+for _ in range (49):
+	x = np.dot(P, x)
+	probabilities.append(x[0])
+
+print(probabilities)
+plt.figure()
+plt.plot(range(1,51), probabilities)
+plt.title('Marginal probabilities for $P(X_n = 1)$ as function of $n$.', fontsize=14)
+plt.xlabel('$n$')
+plt.ylabel('$P(X_n = 1)$')
+plt.show()
+
