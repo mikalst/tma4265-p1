@@ -10,17 +10,25 @@ P = np.array([[0.95, 0.05], [0, 1]])
 x = np.array([0.99, 0.01])
 #a
 def task_a(P, x):
-	#Doing 50 iterations and storing the probability for rain
-	#and then plotting the probability as a funtion of n
+	'''
+	Doing 50 iterations and storing the probability for class 2
+	'''
 	#list to append probabilities
 	probabilities = []
+	#appending the first probability
 	probabilities.append(x[0])
 	#doing 50 iterations
 	for _ in range (49):
-		x = np.dot(P, x)
+		x = np.dot(P, x) 
 		probabilities.append(x[0])
 
-	print(probabilities)
+	return probabilities
+
+def plot_a(P,x):
+	'''
+	plotting the probability as a funtion of n
+	'''
+	probabilities = task_a(P, x)
 	#plotting marginal probabilities
 	plt.figure()
 	plt.plot(range(1,51), probabilities)
@@ -29,32 +37,34 @@ def task_a(P, x):
 	plt.ylabel('$P(X_n = 1)$')
 	plt.show()
 
+
 #task_a(P, x)
+#plot_a(P,x)
 
 
 #b
-def simulate_hill(n_sim, P, x):
-	#The problem is identical to a geometric distribution
-	#and is programmed in that way
-
+def task_b_simulate_hill(n_sim, P, x):
+	'''
+	The problem is identical to a geometric distribution
+	and is programmed in that way. A list of markov chains is returned
+	'''
 	#list to store each simulation
 	realizations = []
 
 	#simulating
 	for _ in range(n_sim):
-		#setting all roads to open
+		#setting all roads to risk 1
 		x = np.ones((50,), dtype=np.int)
 		#simulating each road
 		for i in range(1,50):
-			#initial probability for i = 1
-			if i == 1:
+			if i == 1:  #initial probability for i = 1
 				prob = 0.99
-			else:
+			else:		#probability is 0.95 if i is not 1
 				prob = 0.95
 			#drawing from a uniform distribution
 			random = np.random.uniform(0,1)
 			if random > prob:
-				#if there is an avalanche every road above is set to inaccessible
+				#if there is a road of class 2 every road above is set to risk 2
 				for n in range(50-i):
 					x[i+n] = 2
 				break
@@ -65,7 +75,9 @@ def simulate_hill(n_sim, P, x):
 	return realizations
 
 def plot_b(P, x):
-	#plotting the simulations using imshow 
+	'''
+	plotting the realizations from task 2b with imshow
+	'''
 	image = simulate_hill(25, P, x)
 
 	plt.figure()
@@ -82,4 +94,56 @@ def plot_b(P, x):
 	#må få til å slutte aksene på siste verdi
 	plt.show()
 
-plot_b(P, x)
+#plot_b(P, x)
+
+probabilities = task_a(P, x)
+print(probabilities[20])
+
+def task_c(P, x, k):
+	'''
+	computing forward and backward probability
+	'''
+	#Forward probability:
+	forward_probabilities_1 = []
+	forward_probabilities_2 = []
+	x1 = np.array([1,0])
+	x2 = np.array([0,1])
+	for _ in range(50-k):
+		x1 = np.dot(P, x1)
+		x2 = np.dot(P, x2)
+		forward_probabilities_1.append(x1[0])
+		forward_probabilities_2.append(x2[1])
+	plt.figure()
+	plt.plot(range(50-k), forward_probabilities_1, label='class 1')
+	plt.plot(range(50-k), forward_probabilities_2, label='class 2')
+	plt.legend()
+	plt.show()
+
+	#Backward probability:
+	#the probability for i=1 is 0 since we can't go from class 2 to class 1 
+	probabilities = task_a(P, x)
+	backward_probabilities = []
+	for l in range(k):
+		#Bayes rule: P(A|B)= P(B|A)*P(A)/P(B)
+		pba = 1
+		#P(A)
+		pa = 1-probabilities[l]
+		#P(B) from a)
+		pb = 1-probabilities[k-1]
+		#P(A|B)
+		pab = pba * pa / pb
+
+		backward_probabilities.append(pab)
+
+	plt.figure()
+	plt.plot(range(k), backward_probabilities, label='class 2')
+	plt.plot(range(k), np.zeros(k), label='class 1')
+	plt.legend()
+	plt.show()
+
+
+
+
+
+
+task_c(P, x, 20)
