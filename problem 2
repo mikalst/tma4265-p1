@@ -2,62 +2,84 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
-#plt.style.use('ggplot')
+#plt.style.use('ggplot') #to be used for pthe plot in task a
 
-#a
+#Making transition matrix
 P = np.array([[0.95, 0.05], [0, 1]])
+#initialized vector
 x = np.array([0.99, 0.01])
-
-probabilities = []
-probabilities.append(x[0])
-for _ in range (49):
-	x = np.dot(P, x)
+#a
+def task_a(P, x):
+	#Doing 50 iterations and storing the probability for rain
+	#and then plotting the probability as a funtion of n
+	#list to append probabilities
+	probabilities = []
 	probabilities.append(x[0])
+	#doing 50 iterations
+	for _ in range (49):
+		x = np.dot(P, x)
+		probabilities.append(x[0])
 
-print(probabilities)
-plt.figure()
-plt.plot(range(1,51), probabilities)
-plt.title('Marginal probabilities for $P(X_n = 1)$ as function of $n$.', fontsize=14)
-plt.xlabel('$n$')
-plt.ylabel('$P(X_n = 1)$')
-plt.show()
+	print(probabilities)
+	#plotting marginal probabilities
+	plt.figure()
+	plt.plot(range(1,51), probabilities)
+	plt.title('Marginal probabilities for $P(X_n = 1)$ as function of $n$.', fontsize=14)
+	plt.xlabel('$n$')
+	plt.ylabel('$P(X_n = 1)$')
+	plt.show()
+
+#task_a(P, x)
 
 
 #b
 def simulate_hill(n_sim, P, x):
-	#geometrisk fordeling
+	#The problem is identical to a geometric distribution
+	#and is programmed in that way
+
+	#list to store each simulation
 	realizations = []
 
+	#simulating
 	for _ in range(n_sim):
+		#setting all roads to open
 		x = np.ones((50,), dtype=np.int)
+		#simulating each road
 		for i in range(1,50):
+			#initial probability for i = 1
 			if i == 1:
 				prob = 0.99
 			else:
 				prob = 0.95
+			#drawing from a uniform distribution
 			random = np.random.uniform(0,1)
 			if random > prob:
+				#if there is an avalanche every road above is set to inaccessible
 				for n in range(50-i):
 					x[i+n] = 2
 				break
 
 		realizations.append(x)
 	
-		#riktig lengde på antall sim og antall veikryss
+	#returning the list of the simulations	
 	return realizations
 
+def plot_b(P, x):
+	#plotting the simulations using imshow 
+	image = simulate_hill(25, P, x)
 
-image = simulate_hill(25, P, x)
+	plt.figure()
+	ax = plt.gca() #to size the colorbar
+	im = ax.imshow(image)
+	plt.title('$25$ realizations as a function of time')
+	plt.xlabel('time')
+	plt.ylabel('Realization number')
+	#more stuff for the colorbar
+	divider = make_axes_locatable(ax)
+	cax = divider.append_axes("right", size="5%", pad=0.05)
+	plt.colorbar(im, cax=cax)
+	ax.set_ylim(ax.get_ylim()[::-1])
+	#må få til å slutte aksene på siste verdi
+	plt.show()
 
-plt.figure()
-ax = plt.gca()
-
-im = ax.imshow(image)
-plt.title('$25$ realizations as a function of time')
-plt.xlabel('time')
-plt.ylabel('Realization number')
-divider = make_axes_locatable(ax)
-cax = divider.append_axes("right", size="5%", pad=0.05)
-plt.colorbar(im, cax=cax)
-plt.gca().invert_yaxis() #må snu y-aksen og slutte x-aksen på 50
-plt.show()
+plot_b(P, x)
