@@ -4,8 +4,7 @@ import numpy as np
 
 
 def secretary_problem(k, candidates):
-    """f(k, X) -> {b_1, b_2, b_3}
-    
+    """f(k, X) -> {b_1, b_2, b_3}    
     Runs an instance of the secretary problem on the
     candidates, and returns an array with three boolean values: 
         -> b_1, Whether the algorithm successfully picks the largest value
@@ -19,18 +18,20 @@ def secretary_problem(k, candidates):
     b_3 = 0
     
     # if k > N one will always interview all candidates with no chance
-    if (k>len(candidates)):
+    if k > len(candidates):
         return [0, 0, 1]
     
     # Sample the first k candidates
     x_star = max(candidates[0:k])
     
-    # Run the choice algorithm
+    # If we find a better candidate among the k+1...n, choose it
     x_chosen = None
     for cand in candidates[k:-1]:
         if (cand > x_star):
             x_chosen = cand
             break
+    # If interviewed all but the last candidate, we are forced to choose it and
+    # will thus have interviewed all candidates
     if (x_chosen == None):
         x_chosen = candidates[-1]
         b_3 = 1
@@ -50,9 +51,9 @@ def secretary_problem(k, candidates):
 def simulate(k, N, iterations):
     """f(k, N, iterations) -> [r_best, r_top_three, r_interview_all]
     
-    Runs iterations of the secretary problem with N candidates where the k first
-    are observed. N can either be an fixed or an interval, in which N is chosen 
-    randomly uniform in the interval. Returns an array with three floats
+    Runs iterations of the secretary problem with N candidates where the k
+    first are observed. N can either be an fixed or an interval, in which N is
+    chosen randomly uniform in the interval. Returns an array with three floats
     between 0 and 1:
         -> r_best, the ratio of times the algorithm returned the best candidate
         -> r_top_three, the ratio of times the algorithm returned a
@@ -132,7 +133,7 @@ def plot_stochastic_n():
     plt.title("Analytical with stochastic $N$, $N \in [16, 45]$")
     plt.style.use('ggplot')
     plt.plot(k_values, y_1)
-    plt.plot([10,10],[0, y_1[10]])
+    plt.plot([9,9],[0, y_1[9]-0.001])
     plt.xlabel("$k$")
     plt.ylabel("$P(Z=1|K=k)$")
     plt.legend(["stochastic $N \in [16, 45]$", "$x=10$"])
@@ -143,17 +144,21 @@ def plot_stochastic_n():
 def main():
     flag = {0: "1b",
             1: "1c",
-            2: "1d"}[0]
+            2: "1d"}[2]
     
     if flag == "1b":
         plot_analytical()
         
     elif flag == "1c":
-        print(simulate(11, 30, 1000))
+        for k in range(9, 14):
+            print(simulate(k, 30, 100000))
+            print(p_fixed_n(k, 30))
         
     elif flag == "1d":
         plot_stochastic_n()
-        print(simulate(11, [16, 45], 1000))
+        for k in range(8, 13):
+            print(simulate(k, [16, 45], 100000))
+            print(p_varying_n(k))
     
 
 if __name__ == "__main__":
