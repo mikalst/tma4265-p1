@@ -47,7 +47,7 @@ def secretary_problem(k, candidates):
     return [b_1, b_2, b_3]
 
 
-def simulate_const_n(k, N, iterations):
+def simulate(k, N, iterations):
     """f(k, N, iterations) -> [r_best, r_top_three, r_interview_all]
     
     Runs iterations of the secretary problem with N candidates where the k first
@@ -108,15 +108,36 @@ def p_varying_n(k):
 
 
 def plot_analytical():
-    k_1 = range(1,30)
+    k_1 = range(1, 30)
     k_2 = range(1, 40)
     y_1 = [p_fixed_n(k, 30) for k in k_1]
     y_2 = [p_fixed_n(k, 40) for k in k_2]
     
-    
+    plt.title("Analytical with fixed $N$, $N \in \{30, 40\}$")
     plt.style.use('ggplot')
     plt.plot(k_1, y_1)
     plt.plot(k_2, y_2)
+    plt.plot([11, 11], [0, y_1[11]])
+    plt.plot([15, 15], [0, y_2[15]])
+    plt.xlabel("$k$")
+    plt.ylabel("$P(Z=1|K=k)$")
+    plt.legend(["fixed $N=30$", "fixed $N=40$", "$x=11$", "$x=16$"])
+    plt.savefig("oppg1b")
+    
+    
+def plot_stochastic_n():
+    k_values = range(1, 45)
+    y_1 = [p_varying_n(k) for k in k_values]
+    
+    plt.title("Analytical with stochastic $N$, $N \in [16, 45]$")
+    plt.style.use('ggplot')
+    plt.plot(k_values, y_1)
+    plt.plot([10,10],[0, y_1[10]])
+    plt.xlabel("$k$")
+    plt.ylabel("$P(Z=1|K=k)$")
+    plt.legend(["stochastic $N \in [16, 45]$", "$x=10$"])
+    plt.savefig("oppg1d")
+
 
 
 def main():
@@ -126,8 +147,13 @@ def main():
     
     if flag == "1b":
         plot_analytical()
-    
-    
+        
+    elif flag == "1c":
+        print(simulate(11, 30, 1000))
+        
+    elif flag == "1d":
+        plot_stochastic_n()
+        print(simulate(11, [16, 45], 1000))
     
 
 if __name__ == "__main__":
