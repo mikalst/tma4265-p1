@@ -39,9 +39,7 @@ def plot_a(P,x):
 	plt.ylabel('$P(X_n = 1)$')
 	plt.show()
 
-
 #plot_a(P,x)
-
 
 #b
 def task_b_simulate_hill(n_sim, P, x):
@@ -86,7 +84,6 @@ def task_b_simulate_hill(n_sim, P, x):
 
 #task_b_simulate_hill(50, P, x)
 
-
 def plot_b(P, x):
 	'''
 	plotting the realizations from task 2b with imshow
@@ -113,14 +110,10 @@ def plot_b(P, x):
 
 #plot_b(P, x)
 
-#probabilities = task_a(P, x)
-#print(probabilities[20])
-
 def task_c(P, x, k):
 	'''
 	computing forward and backward probability
 	'''
-	#Forward probability:
 	fw = np.matrix([[0.95, 0.05], [0, 1]])
 	bw = np.matrix([[1, 0], [0.05, 0.95]])
 
@@ -129,18 +122,19 @@ def task_c(P, x, k):
 	y1 = []
 	y2 = []
 
-	for k in range(19,0, -1):
-		y1.append((v1*bw**k)[0,1])
-		y2.append((v2*bw**k)[0,1])
+	for l in range(k-1,0, -1):
+		y1.append((v1*bw**l)[0,1])
+		y2.append((v2*bw**l)[0,1])
 
-	for k in range(0, 31):
-		y1.append((v1*fw**k)[0,1])
-		y2.append((v2*fw**k)[0,1])
+	for l in range(0, 51-k):
+		y1.append((v1*fw**l)[0,1])
+		y2.append((v2*fw**l)[0,1])
 
 	return y1, y2
 
 def plot_c(P, x, k):
 	y1, y2 = task_c(P, x, k)
+	print('Length og y1 and y2: ', len(y1), ', ', len(y2))
 	plt.style.use("ggplot")
 	plt.ylabel("$P(X_l = 2)$")
 	plt.xlabel("$l$")
@@ -150,7 +144,7 @@ def plot_c(P, x, k):
 	plt.show()
 
 #task_c(P, x, 20)
-#plot_c(P, x, 20)
+plot_c(P, x, 20)
 
 def task_d(P, x):
 	'''
@@ -174,23 +168,36 @@ def task_d(P, x):
 	print('count = ', count)
 
 #task_d(P, x)
-
+'''
+np.set_printoptions(precision=3)
+print('start')
+a1, a2 = task_c(P,x,10)
+print(a1, '\n', a2)
+a1, a2 = task_c(P,x,40)
+print('\n\n',a1, '\n', a2)
+'''
 def inf_gain_at_k(P, x, k):
 	y2, y1 = task_c(P, x, k)
 	marg_prob = task_a(P, x)
 	total = 0
 	for i in range(2):
 		price = 0
+		if i==0:
+			prob = y1
+			print('Chose y1')
+		else:# i==1:
+			prob = y2
+			print('Chose y2')
 		for n in range(50):
-			if i==0:
-				prob = y1
-			if i==1:
-				prob = y2
 			price += 5000*prob[n]
-		if i:
+			
+		if i==0:
 			total += min(100000, price)*marg_prob[2*k]
+			print('Pris = ', price, ' marg prob = ', marg_prob[2*k])
 		else:
 			total += min(100000, price)*(1-marg_prob[2*k])
+			print('Pris = ', price, ' marg prob = ', marg_prob[2*k])
+	print('returnerer total = ', total)
 	return total
 
 def task_e(P, x):
@@ -200,5 +207,8 @@ def task_e(P, x):
 
 	print(totals)
 	print(len(totals))
+	plt.figure()
+	plt.plot(range(1,51), totals)
+	plt.show()
 
 task_e(P, x)
