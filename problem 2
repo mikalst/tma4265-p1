@@ -20,7 +20,7 @@ def task_a(P, x):
 	probabilities.append(x[1])
 	#doing 50 iterations
 	for _ in range (49):
-		x = np.dot(x, P) #
+		x = np.dot(x, P) 
 		probabilities.append(x[0])
 		probabilities.append(x[1])
 	
@@ -33,7 +33,7 @@ def plot_a(P,x):
 	probabilities = task_a(P, x)
 	#plotting marginal probabilities
 	plt.figure()
-	plt.plot(range(1,51), probabilities[::2])
+	plt.plot(range(1,51), probabilities[::2]) #flattened list
 	plt.title('Marginal probabilities for $P(X_n = 1)$ as function of $n$.', fontsize=14)
 	plt.xlabel('$n$')
 	plt.ylabel('$P(X_n = 1)$')
@@ -58,7 +58,7 @@ def task_b_simulate_hill(n_sim, P, x):
 		x = np.ones((50,), dtype=np.int)
 		
 		#simulating each road
-		for i in range(1,50):
+		for i in range(1,51):
 			if i == 1:  #initial probability for i = 1
 				prob = 0.99
 			else:		#probability is 0.95 if i is not 1
@@ -67,17 +67,22 @@ def task_b_simulate_hill(n_sim, P, x):
 			random = np.random.uniform(0,1)
 			if random > prob:
 				#if there is a road of class 2 every road above is set to risk 2
-				count+=i
-				print('i = ', i, ' count = ', count) # debugging
 				for n in range(50-i):
 					x[i+n] = 2
 				break
 
 		realizations.append(x)
+
+	mean = np.zeros(50)
+	for r in realizations:
+		for i, state in enumerate(r):
+			if state==1:
+				mean[i]+=1
+
+	means = np.divide(mean, n_sim)
 	
 	#returning the list of the simulations
-	print(count/50) # debugging
-	return realizations
+	return realizations, means
 
 #task_b_simulate_hill(50, P, x)
 
@@ -86,7 +91,7 @@ def plot_b(P, x):
 	'''
 	plotting the realizations from task 2b with imshow
 	'''
-	image = task_b_simulate_hill(25, P, x)
+	image, means = task_b_simulate_hill(25, P, x)
 
 	plt.figure()
 	ax = plt.gca() #to size the colorbar
@@ -100,6 +105,10 @@ def plot_b(P, x):
 	plt.colorbar(im, cax=cax)
 	ax.set_ylim(ax.get_ylim()[::-1])
 	#må få til å slutte aksene på siste verdi
+	plt.show()
+
+	plt.figure()
+	plt.plot(range(1,51), means)
 	plt.show()
 
 #plot_b(P, x)
@@ -142,9 +151,9 @@ def task_c(P, x, k):
 		#Bayes rule: P(A|B)= P(B|A)*P(A)/P(B)
 		pba = 1
 		#P(A)
-		pa = 1-probabilities[l]
+		pa = 1-probabilities[2*l]
 		#P(B) from a)
-		pb = 1-probabilities[k-1]
+		pb = 1-probabilities[2*k-1]
 		#P(A|B)
 		pab = pba * pa / pb
 
@@ -157,8 +166,8 @@ def plot_c(P, x, k):
 	forward_probabilities_1, forward_probabilities_2, backward_probabilities = task_c(P, x, k)
 
 	plt.figure()
-	plt.plot(range(50-k), forward_probabilities_1, label='class 1')
-	plt.plot(range(50-k), forward_probabilities_2, label='class 2')
+	plt.plot(range(50-k), forward_probabilities_1, label='state 1')
+	plt.plot(range(50-k), forward_probabilities_2, label='state 2')
 	plt.legend()
 	plt.show()
 
@@ -169,7 +178,7 @@ def plot_c(P, x, k):
 	plt.show()
 
 task_c(P, x, 20)
-#plot_c(P, x, 20)
+plot_c(P, x, 20)
 
 def task_d(P, x):
 	'''
@@ -192,7 +201,7 @@ def task_d(P, x):
 		print('fixed price of 100000')
 	print('count = ', count)
 
-task_d(P, x)
+#task_d(P, x)
 '''
 def inf_gain_at_k(P, x, k):
 	forward_probabilities_1, backward_probabilities = task_c(P, x)
