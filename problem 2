@@ -121,64 +121,36 @@ def task_c(P, x, k):
 	computing forward and backward probability
 	'''
 	#Forward probability:
-	forward_probabilities_1 = [] # i = 1
-	forward_probabilities_2 = [] # i = 2
-	x1 = np.array([1,0])
-	x2 = np.array([0,1])
-	for _ in range(50-k):
-		#x1 = np.dot(P, x1)#gjorde dette først
-		#x2 = np.dot(P, x2)
-		x1 = np.dot(x1, P)
-		x2 = np.dot(x2, P)
-		forward_probabilities_1.append(x1[0])
-		forward_probabilities_2.append(x2[1])
+	fw = np.matrix([[0.95, 0.05], [0, 1]])
+	bw = np.matrix([[1, 0], [0.05, 0.95]])
 
-	#Backward probability:
-	#the probability for i=1 is 0 since we can't go from class 2 to class 1 
-	probabilities = task_a(P, x)
-	#finding backward transition matrix:
-	A = np.array([[1, 0]])
-	b = np.array([[1,0]])
-	c =np.concatenate((A,b))
-	print(c)
-	
-	
+	v1 = [1,0]
+	v2 = [0,1]
+	y1 = []
+	y2 = []
 
+	for k in range(19,0, -1):
+		y1.append((v1*bw**k)[0,1])
+		y2.append((v2*bw**k)[0,1])
 
+	for k in range(0, 31):
+		y1.append((v1*fw**k)[0,1])
+		y2.append((v2*fw**k)[0,1])
 
-	backward_probabilities = []
-	for l in range(k):
-		#Bayes rule: P(A|B)= P(B|A)*P(A)/P(B)
-		pba = 1
-		#P(A)
-		pa = 1-probabilities[2*l]
-		#P(B) from a)
-		pb = 1-probabilities[2*k-1]
-		#P(A|B)
-		pab = pba * pa / pb
-
-		backward_probabilities.append(pab) #nå er det noe feil her
-
-	#print(forward_probabilities_1, forward_probabilities_2, backward_probabilities) #debugging
-	return forward_probabilities_1, forward_probabilities_2, backward_probabilities
+	return y1, y2
 
 def plot_c(P, x, k):
-	forward_probabilities_1, forward_probabilities_2, backward_probabilities = task_c(P, x, k)
-
-	plt.figure()
-	plt.plot(range(50-k), forward_probabilities_1, label='state 1')
-	plt.plot(range(50-k), forward_probabilities_2, label='state 2')
-	plt.legend()
+	y1, y2 = task_c(P, x, k)
+	plt.style.use("ggplot")
+	plt.ylabel("$P(X_l = 2)$")
+	plt.xlabel("$l$")
+	plt.plot(range(1,51), y1)
+	plt.plot(range(1,51), y2)
+	plt.legend(["$P(X_l = 2 | X_{20} = 1)$", "$P(X_l = 2 | X_{20} = 2)$"])
 	plt.show()
 
-	plt.figure()
-	plt.plot(range(k), backward_probabilities, label='class 2')
-	plt.plot(range(k), np.zeros(k), label='class 1')
-	plt.legend()
-	plt.show()
-
-task_c(P, x, 20)
-plot_c(P, x, 20)
+#task_c(P, x, 20)
+#plot_c(P, x, 20)
 
 def task_d(P, x):
 	'''
@@ -202,24 +174,31 @@ def task_d(P, x):
 	print('count = ', count)
 
 #task_d(P, x)
-'''
+
 def inf_gain_at_k(P, x, k):
-	forward_probabilities_1, backward_probabilities = task_c(P, x)
+	y2, y1 = task_c(P, x, k)
+	marg_prob = task_a(P, x)
 	total = 0
-	for i in [1, 2]:
+	for i in range(2):
 		price = 0
 		for n in range(50):
-			if n<k:
-				price += 5000*backward_probabilities[k-1]#k-1 to get road k
-			elif n>k:
-				price += 5000*forward_probabilities_1[k-1]
-			else:#n=k -> P(a|a)=1
-
-
-		total += min(100000, price) * #P(X_k=i)
-
-
-
+			if i==0:
+				prob = y1
+			if i==1:
+				prob = y2
+			price += 5000*prob[n]
+		if i:
+			total += min(100000, price)*marg_prob[2*k]
+		else:
+			total += min(100000, price)*(1-marg_prob[2*k])
+	return total
 
 def task_e(P, x):
-'''
+	totals = []
+	for k in range(50):
+		totals.append(inf_gain_at_k(P, x, k))
+
+	print(totals)
+	print(len(totals))
+
+task_e(P, x)
