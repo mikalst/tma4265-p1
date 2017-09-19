@@ -39,7 +39,7 @@ def plot_a(P,x):
 	plt.ylabel('$P(X_n = 1)$')
 	plt.show()
 
-#plot_a(P,x)
+plot_a(P,x)
 
 #b
 def task_b_simulate_hill(n_sim, P, x):
@@ -108,7 +108,7 @@ def plot_b(P, x):
 	plt.plot(range(1,51), means)
 	plt.show()
 
-#plot_b(P, x)
+plot_b(P, x)
 
 def task_c(P, x, k):
 	'''
