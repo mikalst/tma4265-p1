@@ -39,7 +39,7 @@ def plot_a(P,x):
 	plt.ylabel('$P(X_n = 1)$')
 	plt.show()
 
-plot_a(P,x)
+#plot_a(P,x)
 
 #b
 def task_b_simulate_hill(n_sim, P, x):
@@ -105,7 +105,10 @@ def plot_b(P, x):
 	plt.show()
 
 	plt.figure()
+	plt.title('Average result of the realizations as a function of $n$.')
 	plt.plot(range(1,51), means)
+	plt.xlabel('$n$')
+	plt.ylabel('Average')
 	plt.show()
 
 plot_b(P, x)
@@ -136,6 +139,7 @@ def plot_c(P, x, k):
 	y1, y2 = task_c(P, x, k)
 	print('Length og y1 and y2: ', len(y1), ', ', len(y2))
 	plt.style.use("ggplot")
+	plt.title('Forward and backward propabilities as a function of $l$')
 	plt.ylabel("$P(X_l = 2)$")
 	plt.xlabel("$l$")
 	plt.plot(range(1,51), y1)
@@ -144,9 +148,9 @@ def plot_c(P, x, k):
 	plt.show()
 
 #task_c(P, x, 20)
-plot_c(P, x, 20)
+#plot_c(P, x, 20)
 
-def task_d(P, x):
+#def task_d(P, x):
 	'''
 	This function gets the probabilities from task a 
 	and sums over these with a cost of 5000 per road.
@@ -211,4 +215,4 @@ def task_e(P, x):
 	plt.plot(range(1,51), totals)
 	plt.show()
 
-task_e(P, x)
+#task_e(P, x)
