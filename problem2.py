@@ -128,6 +128,8 @@ def task_a():
     plt.xlabel('$n$')
     plt.ylabel('$P(X_n = 1)$')
     plt.plot(range(1,51), [P_x(k) for k in range(1,51)])
+    plt.savefig("task_a")
+    plt.show()
 
 
 def task_b():
@@ -148,6 +150,7 @@ def task_b():
     plt.colorbar(im, cax=cax)
     ax.set_ylim(ax.get_ylim()[::-1])
     #må få til å slutte aksene på siste verdi
+    plt.savefig("task_b1")
     plt.show()
 
     plt.figure()
@@ -155,6 +158,7 @@ def task_b():
     plt.plot(range(1,51), means)
     plt.xlabel('$n$')
     plt.ylabel('Average')
+    plt.savefig("task_b2")
     plt.show()
     
 
@@ -169,6 +173,7 @@ def task_c():
     plt.plot(range(1,51), y1)
     plt.plot(range(1,51), y2)
     plt.legend(["$P(X_l = 2 | X_{20} = 1)$", "$P(X_l = 2 | X_{20} = 2)$"])
+    plt.savefig("task_c")
     plt.show()
 
     
@@ -191,9 +196,10 @@ def task_d():
 def task_e():
     plt.figure()
     plt.plot(range(1,51), [information_gain(k) for k in range(1,51)])
-    plt.title("$V_k = \sum_{i=1}^{2} min \{1000000, 5000\sum_{n=1}^{50}P(X_n = 2 | X_k = i)\}P(X_k=i)$")
+    plt.title("$V_k = \sum_{i=1}^{2} min \{1000000, 5000\sum_{n=1}^{50}P(X_n = 2 | X_k = i)\}P(X_k=i)$",fontsize=12)
     plt.xlabel("$k$")
     plt.ylabel("$V_k$")
+    plt.savefig("task_e")
     plt.show()
 
     
