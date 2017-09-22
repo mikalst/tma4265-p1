@@ -15,10 +15,9 @@ def P_x(k):
         return 0.99 * 0.95**(k-1)
 
 def simulate_hill(n_sim):
-    '''
-    The problem is identical to a geometric distribution
-    and is programmed in that way. A list of markov chains is returned
-    '''
+    """
+    Simulate 25 realizations of the Markov chain. 
+    """
     #list to store each simulation
     realizations = []
 
@@ -54,22 +53,21 @@ def simulate_hill(n_sim):
     return realizations, means
 
 def P_bw(k):
-
+    """Returns the backward transition matrix at step k
+    """
     PB = np.matrix([[1.0,0.0],[0.0,0.0]])
     PB[1,0]=P[0,1]*P_x(k-1)/(1-P_x(k))
     PB[1,1]=P[1,1]*(1-P_x(k-1))/(1-P_x(k))
     return PB
 
 def sensor_prob(k):
+    """Compute forward and backward probability at each point, given that we
+    have observed state X_k
     """
-    Compute forward and backward probability
-    """
-    # Set state vectors
-    v10 = np.matrix([1,0])
-    v11 = np.matrix([1,0])
-    v20 = np.matrix([0,1])
-    v21 = np.matrix([0,1])
- 
+    v1 = np.matrix([1,0]) # X_k = 1
+    v2 = np.matrix([0,1]) # X_k = 2
+
+    # Prepare result vectors 
     y1 = np.zeros((50,))
     y2 = np.zeros((50,))
     
@@ -77,23 +75,30 @@ def sensor_prob(k):
     
     plac = k
     while(plac > 1):
-        v10 = v10 * P_bw(plac)
-        v20 = v20 * P_bw(plac)
-        y1[plac-2] = v10[0, 1]
-        y2[plac-2] = v20[0, 1]
+        v1 = v1 * P_bw(plac)
+        v2 = v2 * P_bw(plac)
+        y1[plac-2] = v1[0, 1]
+        y2[plac-2] = v2[0, 1]
         plac -= 1
     plac = k-1
+    
+    # Reset state vectors
+    v1 = np.matrix([1,0])
+    v2 = np.matrix([0,1])
+    
     while(plac < lim):
-        y1[plac] = v11[0, 1]
-        y2[plac] = v21[0, 1]
-        v11 = v11 * P
-        v21 = v21 * P
+        y1[plac] = v1[0, 1]
+        y2[plac] = v2[0, 1]
+        v1 = v1 * P
+        v2 = v2 * P
         plac += 1
 
     return y1, y2
 
 
 def information_gain(k):
+    """As defined by V_k in the tasks
+    """
     y1, y2 = sensor_prob(k)
     
     s1 = 5000*sum(y1)
@@ -153,6 +158,21 @@ def task_b():
     plt.show()
     
 
+def task_c():
+    k = 20
+    y1, y2 = sensor_prob(k)
+    print('Length og y1 and y2: ', len(y1), ', ', len(y2))
+    plt.style.use("ggplot")
+    plt.title('Forward and backward propabilities as a function of $l$')
+    plt.ylabel("$P(X_l = 2)$")
+    plt.xlabel("$l$")
+    plt.plot(range(1,51), y1)
+    plt.plot(range(1,51), y2)
+    plt.legend(["$P(X_l = 2 | X_{20} = 1)$", "$P(X_l = 2 | X_{20} = 2)$"])
+    plt.show()
+
+    
+
 def task_d():
     '''
     This function gets the probabilities from task a 
@@ -175,9 +195,11 @@ def task_e():
     plt.xlabel("$k$")
     plt.ylabel("$V_k$")
     plt.show()
+
     
 if __name__ == "__main__":
     task_a()
     task_b()
+    task_c()
     task_d()
     task_e()
