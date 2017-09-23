@@ -18,7 +18,7 @@ def plot1(xvalues, yvalues, title, xlabel, ylabel, opt, xl,
     xopt = round(opt)
     yopt = yvalues[xopt - 1]
 
-    plt.annotate("Optimal choise,\nk = {},\np = {}".format(xopt, round(yopt, 4)), xy = (xopt, yopt),
+    plt.annotate("Optimal choice,\nk = {},\np = {}".format(xopt, round(yopt, 4)), xy = (xopt, yopt),
                  xytext = (xopt + 0.5, yopt + 0.05), fontsize = 12.5, color = "red",
                  arrowprops = dict(facecolor = "black", shrink = 0.05))
     
@@ -42,10 +42,10 @@ def plot2(xvalues1, yvalues1, xvalues2, yvalues2, title,
     yopt2 = yvalues2[xopt2 - 1]
     plt.annotate("$N = 30$", xy = (34, 0.45), fontsize = 17, color = "red")
     plt.annotate("$N = 40$", xy = (34, 0.40), fontsize = 17, color = "blue")
-    plt.annotate("Optimal choise,\nk = {},\np = {}".format(xopt1, round(yopt1, 4)), xy = (xopt1, yopt1),
+    plt.annotate("Optimal choice,\nk = {},\np = {}".format(xopt1, round(yopt1, 4)), xy = (xopt1, yopt1),
                                              xytext = (xopt1 - 8.5, yopt1 + 0.04), fontsize = textsize, color = "red",
                                              arrowprops = dict(facecolor = "black", shrink = 0.05) )
-    plt.annotate("Optimal choise,\nk = {},\np = {}".format(xopt2, round(yopt2, 4)), xy = (xopt2, yopt2),
+    plt.annotate("Optimal choice,\nk = {},\np = {}".format(xopt2, round(yopt2, 4)), xy = (xopt2, yopt2),
                                              xytext = (xopt2, yopt1 + 0.04), fontsize = textsize, color = "blue",
                                              arrowprops = dict(facecolor = "black", shrink = 0.05) )
     
