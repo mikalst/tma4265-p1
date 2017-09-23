@@ -194,9 +194,12 @@ def task_d():
 
 
 def task_e():
+    y = [information_gain(k) for k in range(1,51)]
+    bot = min(y)
+    print(y.index(bot)+1)
     plt.figure()
-    plt.plot(range(1,51), [information_gain(k) for k in range(1,51)])
-    plt.title("$V_k = \sum_{i=1}^{2} min \{1000000, 5000\sum_{n=1}^{50}P(X_n = 2 | X_k = i)\}P(X_k=i)$",fontsize=12)
+    plt.plot(range(1,51), y)
+    plt.title("Expected gain in information",fontsize=12)
     plt.xlabel("$k$")
     plt.ylabel("$V_k$")
     plt.savefig("task_e")
